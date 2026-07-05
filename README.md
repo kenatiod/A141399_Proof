@@ -72,12 +72,16 @@ to remove them.
 
 ## Sequences
 
-- [A141399](https://oeis.org/A141399) — prime-complete products (this proof's
-  subject).
+- [A141399](https://oeis.org/A141399) — Prime-Complete products of two consecutive integers. (this proof'ssubject).
 - [A118478](https://oeis.org/A118478) — the floor $A_r$.
 - [A002072](https://oeis.org/A002072) — the ceiling $L_r$.
 - [A215021](https://oeis.org/A215021) — the quotient $A_r(A_r+1)/P_r$.
-
+- [A055932](https://oeis.org/A055932) — Numbers all of whose prime divisors are consecutive primes starting at 2.
+- [A385415](https://oeis.org/A385415) — Prime-Complete products of three consecutive integers.
+- [A052762](https://oeis.org/A052762) — Products of four consecutive integers.
+- [A385631](https://oeis.org/A385631) — Prime-Complete products of five consecutive integers.
+- [A217056](https://oeis.org/A217056) - Highly composite products of four consecutive integers.
+  
 ## Related repositories
 
 The computational certification of the finite base lives in separate
@@ -117,5 +121,4 @@ ongoing study of human–AI collaboration in mathematical research.
 
 ## License
 
-(Choose one — e.g. CC BY 4.0 for the papers, MIT for any code — and add a
-`LICENSE` file.)
+MIT License — see [LICENSE](LICENSE).
