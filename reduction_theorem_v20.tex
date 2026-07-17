@@ -1,0 +1,489 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\docversion}{20}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\lcm}{\operatorname{lcm}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\QR}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Pmax}{P^+}
+
+\title{A Small-Index Reduction for Prime-Complete Products of Two Consecutive Integers (Version \docversion)}
+\author{Ken Clements}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let
+\[
+        P_r=p_r^\#=\prod_{i=1}^r p_i
+\]
+be the $r$-th primorial.  A product $m(m+1)$ is called prime-complete of order $r$ if
+\[
+        \rad(m(m+1))=P_r.
+\]
+This note proves an unconditional reduction theorem for any such product in the tail range.  
+If $D$ is the squarefree part of $m(m+1)$, then $D\mid P_r$ and $x=2m+1$ lies on the Pell branch
+\[
+        X^2-DY^2=1.
+\]
+Writing the positive solutions of this Pell equation as
+\[
+        X_n+Y_n\sqrt D=(X_1+Y_1\sqrt D)^n,
+\]
+the corresponding index $n$ must be small:
+\[
+        n \le p_r+1.
+\]
+Moreover every prime $p\le p_r$ not dividing $D$ must divide $Y_n$, and hence the least 
+index $\rho_p(D)$ for which $p\mid Y_{\rho_p(D)}$ must divide $n$.  
+Therefore the least-common-multiple obstruction
+\[
+        R_r(D)=\lcm_{\substack{3\le p\le p_r\\ p\nmid D}} \rho_p(D)
+\]
+must satisfy
+\[
+        R_r(D)\mid n\le p_r+1.
+\]
+Consequently a branch $D$ with $R_r(D)>p_r+1$ cannot support a prime-complete product of order $r$.
+
+The proof uses only the Pell reduction, the divisibility properties of Lucas sequences, 
+and the Bilu--Hanrot--Voutier primitive divisor theorem.  It does not use the $abc$ 
+conjecture, any bound for the largest pair of consecutive $p_r$-smooth integers, 
+or any lower bound for the first CRT root.
+\end{abstract}
+
+\section{Introduction}
+
+The problem considered here is the termination of prime-complete products of two consecutive integers.  
+We say that $m(m+1)$ is prime-complete of order $r$ when its radical is exactly the $r$-th primorial:
+\[
+        \rad(m(m+1))=P_r=p_r^\#.
+\]
+Equivalently, the set of distinct prime factors of $m(m+1)$ is precisely
+\[
+        \{2,3,5,\ldots,p_r\}.
+\]
+
+One possible route to termination is to compare two global objects: a smooth ceiling for 
+consecutive $p_r$-smooth pairs and a discrete radical--CRT floor.  The reduction proved 
+here takes a different route.  It does not attempt to bound all consecutive smooth pairs.  
+Instead, it keeps the prime-complete condition and asks what must happen on the Pell 
+branch attached to a hypothetical prime-complete product.
+
+The result is a small-index reduction.  Any prime-complete product of order $r$ gives 
+a Pell solution indexed by some $n$.  The Bilu--Hanrot--Voutier primitive divisor 
+theorem bounds that index by $p_r+1$ in the tail range, while rank-of-apparition 
+divisibility forces a large least common multiple to divide the same index.  
+Thus, for each squarefree branch $D\mid P_r$, a simple necessary condition emerges:
+\[
+        R_r(D) \le p_r+1.
+\]
+Branches violating this inequality are eliminated unconditionally.
+
+This note is deliberately limited in scope.  It does not prove that no prime-complete 
+product exists in the tail.  Rather, it proves that any tail counterexample must 
+live in a sharply constrained small-index core.
+
+\section{Definitions and notation}
+
+Let $p_r$ denote the $r$-th prime and set
+\[
+        P_r=p_r^\#=\prod_{i=1}^r p_i.
+\]
+For a positive integer $N$, let $\rad(N)$ be the product of the distinct prime 
+factors of $N$, and let $P^+(N)$ denote its largest prime factor.
+
+\begin{definition}[Prime-complete consecutive product]
+A product $m(m+1)$ is \emph{prime-complete of order $r$} if
+\[
+        \rad(m(m+1))=P_r.
+\]
+\end{definition}
+
+If $N=m(m+1)$ is prime-complete of order $r$, then all prime factors of $N$ 
+are at most $p_r$, and every prime at most $p_r$ occurs at least once.
+
+\begin{definition}[Squarefree branch]
+Let $N=m(m+1)$, and write
+\[
+        N=Dz^2
+\]
+with $D$ squarefree and $z\in\Z_{>0}$.  We call $D$ the \emph{Pell branch} 
+or \emph{squarefree branch} attached to $m(m+1)$.
+\end{definition}
+
+If $m(m+1)$ is prime-complete of order $r$, then
+\[
+        D \mid P_r.
+\]
+Moreover $D>1$, since $m(m+1)$ cannot be a positive square for $m \ge 1$.
+
+For a squarefree integer $D>1$, let
+\[
+        \eta_D=X_1+Y_1\sqrt D
+\]
+be the fundamental positive solution of
+\[
+        X^2-DY^2=1.
+\]
+The positive solutions are indexed by $n\ge1$ via
+\[
+        X_n+Y_n\sqrt D=\eta_D^n.
+\]
+The sequence $(Y_n)$ is a Lucas sequence up to the fixed factor $Y_1$:
+\[
+        U_n(D):=\frac{Y_n}{Y_1}
+\]
+is an integer Lucas sequence with real roots.
+
+\section{The Pell reduction}
+
+\begin{lemma}[Pell attachment]\label{lem:pell-attachment}
+Let $m(m+1)$ be prime-complete of order $r$.  Write
+\[
+        m(m+1)=Dz^2
+\]
+with $D$ squarefree.  Then $D\mid P_r$, and
+\[
+        X=2m+1,\qquad Y=2z
+\]
+satisfy
+\[
+        X^2-DY^2=1.
+\]
+Consequently, for some $n\ge1$,
+\[
+        X+Y\sqrt D=(X_1+Y_1\sqrt D)^n.
+\]
+Furthermore $Y_n=Y$ is $p_r$-smooth.
+\end{lemma}
+
+\begin{proof}
+Since $m(m+1)=Dz^2$, we have
+\[
+        (2m+1)^2-1=4m(m+1)=4Dz^2.
+\]
+Thus, with $X=2m+1$ and $Y=2z$,
+\[
+        X^2-DY^2=1.
+\]
+Because $\rad(m(m+1))=P_r$, the squarefree part $D$ divides $P_r$.  Also $z$ 
+has no prime factor exceeding $p_r$, so $Y=2z$ has no prime factor exceeding 
+$p_r$.  Hence $Y$ is $p_r$-smooth.
+
+Every positive solution of $X^2-DY^2=1$ is a positive power of the fundamental 
+solution, so the asserted index $n$ exists.
+\end{proof}
+
+\begin{definition}[Complementary product]
+For $D\mid P_r$, define the complementary product
+\[
+        B_r(D)=\frac{P_r}{D}.
+\]
+\end{definition}
+
+\begin{lemma}[Complementary support]\label{lem:complement-support}
+Let $m(m+1)$ be prime-complete of order $r$, and let $D$ be its squarefree branch.  
+If the attached Pell solution has $Y=Y_n$, then
+\[
+        B_r(D)\mid Y_n.
+\]
+In particular, for every prime $p\le p_r$ with $p\nmid D$, one has
+\[
+        p\mid Y_n.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $m(m+1)=Dz^2$.  Let $p\le p_r$ and suppose $p\nmid D$.  Since $m(m+1)$ is 
+prime-complete, $p$ divides $m(m+1)$.  Because $p\nmid D$ and $D$ is the squarefree 
+part, the exponent of $p$ in $m(m+1)$ is positive and even.  Hence $p\mid z$, and 
+therefore $p\mid Y=2z$.  This proves that every prime dividing $B_r(D)$ divides 
+$Y_n$, so $B_r(D)\mid Y_n$.
+\end{proof}
+
+\begin{remark}[Parity]
+The Pell equation contains solutions that do not necessarily correspond to an 
+integer $m$, since an actual consecutive product requires $X$ odd and $Y$ even.  
+The reduction in this note is only a necessary condition.  It is harmless, and 
+slightly stronger, to allow all Pell terms in the obstruction.  Parity can be 
+imposed as an additional filter in computations, but it is not needed for 
+the theorem below.
+\end{remark}
+
+\section{Primitive divisors and the index cap}
+
+The first jaw of the reduction is a primitive-divisor bound for the Lucas sequence
+\[
+        U_n(D)=\frac{Y_n}{Y_1}.
+\]
+We use the following standard consequence of the Bilu--Hanrot--Voutier primitive 
+divisor theorem for Lucas and Lehmer sequences.
+
+\begin{lemma}[Primitive divisor bound]\label{lem:primitive}
+Let $D>1$ be squarefree, and let $U_n(D)=Y_n/Y_1$ be the Lucas sequence arising 
+from the Pell equation $X^2-DY^2=1$.  If $n>30$, then $U_n(D)$ has a primitive 
+prime divisor $q$.  Moreover $q$ is coprime to $2D$ and satisfies
+\[
+        n\mid q-\left(\frac{D}{q}\right),
+\]
+where $\left(\frac{D}{q}\right)$ is the Legendre symbol.  Consequently
+\[
+        q\equiv \pm 1 \pmod n
+\]
+and hence
+\[
+        q\ge n-1.
+\]
+\end{lemma}
+
+\begin{proof}
+The existence of a primitive prime divisor for $n>30$ is the Bilu--Hanrot--Voutier 
+theorem applied to the nondegenerate Lucas sequence associated to the conjugate pair
+\[
+        \eta_D=X_1+Y_1\sqrt D,
+        \qquad
+        \eta_D^{-1}=X_1-Y_1\sqrt D.
+\]
+For a primitive divisor $q$ of $U_n(D)$, the rank of apparition of $q$ in the sequence 
+is exactly $n$.  The usual rank divisibility for Pell--Lucas sequences gives
+\[
+        n\mid q-\left(\frac{D}{q}\right).
+\]
+Since the Legendre symbol is $\pm 1$, this gives $q\equiv\pm 1 \pmod n$, and therefore $q \ge n-1$.
+\end{proof}
+
+\begin{proposition}[Small-index cap]\label{prop:index-cap}
+Let $r \ge 10$.  Suppose a Pell term $Y_n$ arising from a branch $D \mid P_r$ is $p_r$-smooth.  Then
+\[
+        n \le p_r+1.
+\]
+\end{proposition}
+
+\begin{proof}
+If $n \le 30$, then the conclusion holds for $r\ge10$, since $p_{10}=29$ and therefore $p_r+1\ge30$.
+
+Suppose $n>30$.  By Lemma~\ref{lem:primitive}, $U_n(D)$ has a primitive prime divisor 
+$q$ satisfying $q\ge n-1$.  Since $U_n(D)$ divides $Y_n$, and $Y_n$ is $p_r$-smooth, 
+we have $q \le p_r$.  Therefore
+\[
+        n-1 \le p_r,
+\]
+which is equivalent to
+\[
+        n \le p_r+1.
+\]
+\end{proof}
+
+\section{Ranks of apparition and support-completeness}
+
+The second jaw of the reduction is the elementary rank-of-apparition condition.
+
+\begin{definition}[Rank of apparition]\label{def:rank}
+Let $D>1$ be squarefree and let $(Y_n)$ be the $Y$-sequence of $X^2-DY^2=1$.  
+For an odd prime $p\nmid D$, define
+\[
+        \rho_p(D)=\min\{n\ge1:p\mid Y_n\}.
+\]
+This minimum exists because the Pell unit has finite order in the norm-one 
+subgroup modulo $p$.
+\end{definition}
+
+\begin{lemma}[Rank divisibility]\label{lem:rank-divisibility}
+Let $D>1$ be squarefree and let $p$ be an odd prime with $p \nmid D$.  Then
+\[
+        p\mid Y_n
+\]
+if and only if
+\[
+        \rho_p(D)\mid n.
+\]
+\end{lemma}
+
+\begin{proof}
+Modulo $p$, work in the quadratic algebra $\mathbb F_p(\sqrt D)$ if $D$ is a 
+quadratic nonresidue and in $\mathbb F_p\times\mathbb F_p$ if $D$ is a residue.  The Pell unit
+\[
+        \eta_D=X_1+Y_1\sqrt D
+\]
+has norm $1$.  The condition $p\mid Y_n$ is exactly the condition that
+\[
+        \eta_D^n=X_n+Y_n\sqrt D
+\]
+has zero $\sqrt D$-coefficient modulo $p$, equivalently that $\eta_D^n$ lies in the 
+rational subfield modulo $p$.  Since the norm is 1, this rational element is $\pm 1$.  
+Thus the set of $n$ for which $p\mid Y_n$ is a nonzero subgroup of $\Z$ under addition, 
+hence is precisely the set of multiples of its least positive element, $\rho_p(D)$.
+\end{proof}
+
+\begin{definition}[Rank lcm obstruction]
+Let $D\mid P_r$ be squarefree.  Define
+\[
+        R_r(D)
+        =
+        \lcm_{\substack{3\le p\le p_r\\ p\nmid D}} \rho_p(D).
+\]
+The prime $2$ is omitted only to avoid parity exceptions in the formal statement; 
+including a valid parity rank for 2 can only strengthen the computational obstruction.
+\end{definition}
+
+\begin{lemma}[Complementary rank condition]\label{lem:rank-condition}
+Let $m(m+1)$ be prime-complete of order $r$, and let $D$ be its squarefree branch.  
+If the attached Pell term is $Y_n$, then
+\[
+        R_r(D)\mid n.
+\]
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:complement-support}, every odd prime $p\le p_r$ with $p\nmid D$ 
+divides $Y_n$.  By Lemma~\ref{lem:rank-divisibility}, this implies
+\[
+        \rho_p(D)\mid n
+\]
+for every such $p$.  Taking the least common multiple over all odd complementary primes gives
+\[
+        R_r(D)\mid n.
+\]
+\end{proof}
+
+\section{The reduction theorem}
+
+We can now state and prove the main reduction.
+
+\begin{theorem}[Small-index reduction theorem]\label{thm:reduction}
+Let $r\ge 37$.  Suppose that $m(m+1)$ is prime-complete of order $r$.  Let $D$ be the 
+squarefree part of $m(m+1)$, so that $D\mid P_r$, and let
+\[
+        X_n+Y_n\sqrt D=(X_1+Y_1\sqrt D)^n
+\]
+be the Pell solution attached to $m$ by
+\[
+        X_n=2m+1.
+\]
+Then all of the following hold:
+\begin{enumerate}[label=\textup{(\roman*)}]
+    \item $Y_n$ is $p_r$-smooth;
+    \item $B_r(D)=P_r/D$ divides $Y_n$;
+    \item $n\le p_r+1$;
+    \item $R_r(D)\mid n$.
+\end{enumerate}
+In particular, a necessary condition for the branch $D$ to support a prime-complete 
+product of order $r$ is
+\[
+        R_r(D)\le p_r+1.
+\]
+\end{theorem}
+
+\begin{proof}
+Assertions (i) and (ii) are Lemmas~\ref{lem:pell-attachment} and~\ref{lem:complement-support}.  
+Since $r \ge 37 \ge 10$, Proposition~\ref{prop:index-cap} applies and gives
+\[
+        n \le p_r+1,
+\]
+which proves (iii).  Finally, Lemma~\ref{lem:rank-condition} gives
+\[
+        R_r(D) \mid n,
+\]
+which proves (iv).
+
+Since $R_r(D)$ is a positive integer dividing $n$, and $n\le p_r+1$, any 
+supporting branch must satisfy
+\[
+        R_r(D) \le p_r+1.
+\]
+This proves the final assertion.
+\end{proof}
+
+\begin{corollary}[Branch elimination criterion]\label{cor:branch-elimination}
+Let $r \ge 37$ and let $D \mid P_r$ be squarefree.  If
+\[
+        R_r(D)>p_r+1,
+\]
+then no prime-complete product of order $r$ has squarefree branch $D$.
+\end{corollary}
+
+\begin{proof}
+This is the contrapositive of the final assertion of Theorem~\ref{thm:reduction}.
+\end{proof}
+
+\section{Interpretation}
+
+Theorem~\ref{thm:reduction} does not assert that the small-index core is empty.  
+It asserts that every tail counterexample must lie inside it.  More explicitly, 
+a prime-complete product of order $r \ge 37$ can exist only if there is a 
+squarefree branch $D\mid P_r$ and an index
+\[
+        n\le p_r+1
+\]
+such that
+\[
+        R_r(D)\mid n,
+        \qquad
+        B_r(D)\mid Y_n,
+        \qquad
+        P^+(Y_n)\le p_r.
+\]
+The rank condition is necessary for the complementary support, and the primitive-divisor 
+theorem makes the index small.  Thus the original tail problem is reduced to a restricted 
+finite-index obstruction on Pell--Lucas branches.
+
+This reduction is independent of the $abc$ conjecture.  It also avoids the stronger 
+problem of bounding the largest pair of consecutive $p_r$-smooth integers.  It uses the 
+prime-complete hypothesis directly: every prime up to $p_r$ must occur, and every prime 
+not occurring in the squarefree part $D$ must occur in the Pell $Y$-coordinate.
+
+\begin{remark}[Why the theorem is tail-stated]
+The proof of the index cap only needs $r \ge 10$, but the theorem is stated for $r \ge 37$ 
+because that is the intended tail range after the finite computational base.  
+Nothing in the proof depends on the specific value $37$ except the inequality $r \ge 10$.
+\end{remark}
+
+\begin{remark}[On possible strengthenings]
+For a fixed branch $D$, stronger lower bounds for the greatest prime factor of $Y_n$ may 
+eventually improve the cap $p_r+1$ for that branch.  Uniform improvement across all 
+$D\mid P_r$ is a separate and more delicate issue because the quadratic field varies 
+with $D$.  The reduction theorem above intentionally avoids any such uniformity assumption.
+\end{remark}
+
+\begin{thebibliography}{9}
+
+\bibitem{BHV}
+Y. Bilu, G. Hanrot, and P. M. Voutier,
+\emph{Existence of primitive divisors of Lucas and Lehmer numbers},
+J. Reine Angew. Math. \textbf{539} (2001), 75--122.
+
+\bibitem{Lehmer}
+D. H. Lehmer,
+\emph{On a problem of St\o rmer},
+Illinois J. Math. \textbf{8} (1964), 57--79.
+
+\bibitem{LucaNajman}
+F. Luca and F. Najman,
+\emph{On the largest prime factor of $x^2-1$},
+arXiv:1005.1533.
+
+\bibitem{Najman}
+F. Najman,
+\emph{Smooth values of quadratic polynomials},
+arXiv:1005.1535.
+
+\end{thebibliography}
+
+\end{document}
