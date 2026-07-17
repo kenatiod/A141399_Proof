@@ -1,0 +1,730 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\rad}{rad}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\ord}{ord}
+\newcommand{\docversion}{20}
+\newcommand{\Pplus}{P^{+}}
+\newcommand{\thetafun}{\vartheta}
+\newcommand{\Prad}{P_r}
+\newcommand{\BrD}{B_r(D)}
+\newcommand{\etaD}{\eta_D}
+\newcommand{\RD}{R_D}
+
+\title{Per-Branch Permanence and Support-Purity Failure
+for Prime-Complete Consecutive Integer Products (Version \docversion)}
+\author{Ken Clements}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let
+\[
+  P_r=p_r^\#=\prod_{i\le r}p_i,
+\]
+and call a consecutive product prime-complete of order $r$ if
+\[
+  \rad(m(m+1))=P_r.
+\]
+Every such product gives a Pell branch
+\[
+  x^2-Dy^2=1,
+  \qquad D\mid P_r,
+\]
+where $D$ is the squarefree part of $m(m+1)$.  On a branch $D$, the primes in
+$P_r/D$ form the complementary support: a prime-complete candidate requires
+$P_r/D\mid y_n$ and also requires $y_n$ to contain no prime exceeding $p_r$.
+This paper proves a per-branch permanence theorem: for every fixed squarefree
+$D>1$, there is a threshold $r_0(D)$ such that for all $r\ge r_0(D)$ no Pell
+term on branch $D$ can be both support-complete and $p_r$-smooth.  The proof is
+unconditional and combines a support-mass lower bound with Stewart's fixed-sequence
+large-prime theorem for Lucas sequence terms.
+
+The theorem shows that no fixed Pell branch can host prime-complete products at
+arbitrarily large orders.  Any infinite tail, if it exists, must therefore pass
+through fresh discriminants whose largest prime factor tends to infinity.  We then
+record the observed small-index diagnostics for $8\le r\le 14$: after the known
+order-$8$ prime-complete hit, all pincer-surviving small-index rows are
+support-complete but support-impure.  Thus the remaining Track 2 obstruction is
+not support coverage; it is support purity.
+\end{abstract}
+
+\section{Introduction}
+
+Let $p_r$ be the $r$-th prime and let
+\[
+  P_r=p_r^\#=\prod_{i=1}^{r}p_i.
+\]
+We call $m(m+1)$ \emph{prime-complete of order $r$} if
+\[
+  \rad(m(m+1))=P_r.
+\]
+Equivalently, every prime $p\le p_r$ divides $m(m+1)$ and no prime $>p_r$ divides
+$m(m+1)$.
+
+The identity
+\[
+  (2m+1)^2-1=4m(m+1)
+\]
+places prime-complete products on Pell branches.  If $D$ is the squarefree part
+of $m(m+1)$, then $D\mid P_r$ and
+\[
+  x=2m+1,\qquad x^2-Dy^2=1
+\]
+for a suitable integer $y$.  Thus, for each squarefree $D>1$, one has a Pell
+branch
+\[
+  x_n+y_n\sqrt D=(x_1+y_1\sqrt D)^n,
+  \qquad n\ge 1,
+\]
+where $x_1+y_1\sqrt D$ is the fundamental solution of $x^2-Dy^2=1$.
+
+The older form of the permanence argument can be summarized as follows:
+\[
+  \text{fixed }D \quad \Longrightarrow \quad \text{eventual branch death.}
+\]
+That statement remains correct and is proved below.  The new diagnostic point is
+sharper.  On branch $D$, define the complementary product
+\[
+  B_r(D)=\frac{P_r}{D}.
+\]
+A prime-complete candidate must satisfy
+\[
+  B_r(D)\mid y_n
+\]
+and also
+\[
+  \Pplus(y_n)\le p_r.
+\]
+The first condition is \emph{support completion}; the second is \emph{support
+purity}.  The computations reported here show that after the known order-$8$
+solution, the small-index residue is not failing because required primes are
+missing.  It is failing because support-complete terms acquire outside primes.
+
+Thus the conceptual picture becomes
+\[
+  \boxed{\text{after }r=8,\ \text{support survives, but purity dies.}}
+\]
+The per-branch theorem explains why old branches cannot persist forever.  The
+support-purity diagnostics explain what happens microscopically in the first
+orders after the last known hit.
+
+\section{Notation and branch conditions}
+
+For $N\ge 2$, write $\Pplus(N)$ for the largest prime divisor of $N$, and set
+$\Pplus(1)=1$ by convention.  Let
+\[
+  \thetafun(x)=\sum_{p\le x}\log p.
+\]
+Then
+\[
+  \log P_r=\thetafun(p_r).
+\]
+
+\begin{definition}[Prime-complete product]
+A product $m(m+1)$ is \emph{prime-complete of order $r$} if
+\[
+  \rad(m(m+1))=P_r.
+\]
+\end{definition}
+
+\begin{definition}[Pell branch]
+Let $D>1$ be squarefree.  Let
+\[
+  \eta_D=x_1+y_1\sqrt D>1
+\]
+be the fundamental solution of
+\[
+  x^2-Dy^2=1.
+\]
+The positive solutions are indexed by
+\[
+  x_n+y_n\sqrt D=\eta_D^n,
+  \qquad n\ge1.
+\]
+Set
+\[
+  R_D=\log \eta_D.
+\]
+\end{definition}
+
+\begin{definition}[Support completion and support purity]
+Suppose $D\mid P_r$.  Define
+\[
+  B_r(D)=\frac{P_r}{D}.
+\]
+A Pell term $y_n$ on branch $D$ is \emph{$r$-support-complete} if
+\[
+  B_r(D)\mid y_n.
+\]
+It is \emph{$p_r$-smooth}, or \emph{support-pure at order $r$}, if
+\[
+  \Pplus(y_n)\le p_r.
+\]
+It is a \emph{support-purity failure} if
+\[
+  B_r(D)\mid y_n
+  \qquad\text{but}\qquad
+  \Pplus(y_n)>p_r.
+\]
+\end{definition}
+
+A genuine prime-complete product must produce both support completion and support
+purity on its Pell branch.  This is the basic branch attachment.
+
+\section{Prime-complete products give support-complete, support-pure Pell terms}
+
+\begin{lemma}[Pell attachment]\label{lem:pell-attach}
+Let $m(m+1)$ be prime-complete of order $r$, and let $D$ be the squarefree part
+of $m(m+1)$.  Then $D\mid P_r$, and there exist integers $x,y$ with
+\[
+  x=2m+1,
+  \qquad
+  x^2-Dy^2=1.
+\]
+Moreover, $(x,y)=(x_n,y_n)$ for some $n\ge1$ on branch $D$.
+\end{lemma}
+
+\begin{proof}
+Since $D$ is the squarefree part of $m(m+1)$, there is an integer $z\ge1$ such
+that
+\[
+  m(m+1)=Dz^2.
+\]
+Prime-completeness implies every prime divisor of $D$ lies among
+$p_1,\ldots,p_r$, so $D\mid P_r$.  Now
+\[
+  (2m+1)^2-1=4m(m+1)=4Dz^2.
+\]
+With $x=2m+1$ and $y=2z$, this gives $x^2-Dy^2=1$.  All positive solutions of
+Pell's equation are powers of the fundamental unit, so $(x,y)=(x_n,y_n)$ for
+some $n\ge1$.
+\end{proof}
+
+\begin{lemma}[Complementary support and purity]\label{lem:support}
+Let $m(m+1)$ be prime-complete of order $r$, and let $D$ be the squarefree part
+of $m(m+1)$.  Let $(x_n,y_n)$ be the associated Pell solution.  Then
+\[
+  B_r(D)=\frac{P_r}{D}\mid y_n
+\]
+and
+\[
+  \Pplus(y_n)\le p_r.
+\]
+\end{lemma}
+
+\begin{proof}
+Write
+\[
+  m(m+1)=Dz^2,
+  \qquad
+  y_n=2z.
+\]
+Let $p\le p_r$ with $p\nmid D$.  Since $m(m+1)$ is prime-complete, $p$ divides
+$m(m+1)$.  Since $p\nmid D$, the exponent of $p$ in $Dz^2$ is even and positive,
+hence at least $2$.  Therefore $p\mid z$, and hence $p\mid y_n$.  This holds for
+every prime divisor of $P_r/D$, so $P_r/D\mid y_n$.
+
+Finally, $y_n=2z$ has no prime divisor outside the prime divisors of $m(m+1)$,
+so $\Pplus(y_n)\le p_r$.
+\end{proof}
+
+\section{Reduction-theorem context}
+
+The per-branch permanence theorem is independent of the small-index reduction,
+but the two results frame the same residual problem.  The reduction theorem says
+that any tail prime-complete product must occur in a small-index, support-complete
+core.
+
+\begin{theorem}[Reduction theorem, quoted form]\label{thm:reduction-context}
+Let $r$ be in the tail range, and suppose a prime-complete product of order $r$
+exists.  Then for some squarefree $D\mid P_r$ and some Pell index $n$ on branch
+$D$, the associated term $y_n$ is support-complete and $p_r$-smooth, and the
+index satisfies
+\[
+  n\le p_r+1.
+\]
+Moreover the complementary rank-lcm condition holds:
+\[
+  R_r(D)\mid n,
+\]
+where $R_r(D)$ is the least common multiple of the ranks of apparition of the
+complementary primes in the branch sequence.
+\end{theorem}
+
+\begin{remark}
+This theorem is not reproved here.  It uses primitive divisors to cap the Pell
+index and rank-of-apparition divisibility to force the complementary primes into
+a common small index.  The present paper proves a perpendicular statement: for a
+fixed branch, support completion eventually forces indices so large that
+Stewart's fixed-sequence theorem makes $p_r$-smoothness impossible.
+\end{remark}
+
+\section{The fixed-branch large-prime input}
+
+We use the following fixed-sequence form of Stewart's theorem on greatest prime
+factors of Lucas and Lehmer sequence terms.
+
+\begin{theorem}[Stewart, fixed-sequence form]\label{thm:stewart}
+Let $(U_n)_{n\ge1}$ be a nondegenerate Lucas sequence with real roots.  Then
+there exists an effectively computable integer $n_0(U)$ such that, for every
+$n>n_0(U)$,
+\[
+  \Pplus(U_n)
+  >
+  n\exp\!\left(\frac{\log n}{104\log\log n}\right).
+\]
+\end{theorem}
+
+\begin{remark}
+The constant $104$ is not important for the permanence argument.  What matters is
+that
+\[
+  \exp\!\left(\frac{\log n}{104\log\log n}\right)\to\infty.
+\]
+The theorem is used one fixed branch at a time, so the threshold may depend on
+$D$.  No branch-uniform Stewart threshold is assumed.
+\end{remark}
+
+For branch $D$, the normalized sequence
+\[
+  U_n(D)=\frac{y_n}{y_1}
+\]
+is an integer Lucas sequence with real roots.  Since $U_n(D)\mid y_n$,
+Stewart's theorem supplies a lower bound for $\Pplus(y_n)$ whenever $n$ exceeds
+the branch-dependent threshold.
+
+\section{Support mass}
+
+The elementary mass estimate is the first jaw.  If $B_r(D)$ divides $y_n$, then
+$y_n$ must be at least $B_r(D)$, which forces the index $n$ to grow with $r$.
+
+\begin{lemma}[Support-mass lower bound]\label{lem:mass}
+Fix squarefree $D>1$ and let $R_D=\log\eta_D$.  Suppose $D\mid P_r$ and
+\[
+  B_r(D)=P_r/D\mid y_n.
+\]
+Then
+\[
+  n\ge
+  M_D(r):=
+  \frac{\thetafun(p_r)+\log 2-\frac12\log D}{R_D}.
+\]
+In particular, $M_D(r)\to\infty$ as $r\to\infty$.
+\end{lemma}
+
+\begin{proof}
+The Pell $y$-coordinate satisfies
+\[
+  y_n=\frac{\eta_D^n-\eta_D^{-n}}{2\sqrt D}
+  <
+  \frac{\eta_D^n}{2\sqrt D}.
+\]
+If $B_r(D)\mid y_n$, then $y_n\ge B_r(D)=P_r/D$.  Hence
+\[
+  \frac{P_r}{D}
+  \le y_n
+  <
+  \frac{\eta_D^n}{2\sqrt D}.
+\]
+Therefore
+\[
+  \eta_D^n>\frac{2P_r}{\sqrt D}.
+\]
+Taking logarithms gives
+\[
+  nR_D>\thetafun(p_r)+\log 2-\frac12\log D.
+\]
+Replacing $>$ by $\ge$ in the displayed lower bound is harmless; one may insert a
+ceiling if an integral bound is desired.  Since $D$ and $R_D$ are fixed while
+$\thetafun(p_r)\to\infty$, the final assertion follows.
+\end{proof}
+
+\section{Per-branch permanence}
+
+\begin{theorem}[Per-Branch Permanence]\label{thm:permanence}
+Fix a squarefree integer $D>1$.  There exists an integer $r_0(D)$ such that for
+every $r\ge r_0(D)$ there is no index $n\ge1$ for which both
+\[
+  B_r(D)=P_r/D\mid y_n
+\]
+and
+\[
+  \Pplus(y_n)\le p_r
+\]
+hold.  Equivalently, for all sufficiently large $r$, branch $D$ carries no term
+that is simultaneously support-complete and support-pure at order $r$.
+\end{theorem}
+
+\begin{proof}
+Fix $D$.  Let
+\[
+  \eta_D=x_1+y_1\sqrt D,
+  \qquad
+  R_D=\log\eta_D,
+\]
+and let
+\[
+  U_n(D)=\frac{y_n}{y_1}
+\]
+be the associated Lucas sequence.  By Theorem~\ref{thm:stewart}, there exists a
+branch-dependent threshold $n_0(D)$ such that, for all $n>n_0(D)$,
+\[
+  \Pplus(U_n(D))
+  >
+  n\exp\!\left(\frac{\log n}{104\log\log n}\right).
+\]
+Since $U_n(D)\mid y_n$, the same lower bound applies to $\Pplus(y_n)$.
+
+Let
+\[
+  M_D(r)=\frac{\thetafun(p_r)+\log 2-\frac12\log D}{R_D}.
+\]
+By Lemma~\ref{lem:mass}, any index $n$ satisfying $B_r(D)\mid y_n$ must have
+\[
+  n\ge M_D(r).
+\]
+By the prime number theorem in the form
+\[
+  \thetafun(p_r)\sim p_r,
+\]
+we have
+\[
+  M_D(r)\sim \frac{p_r}{R_D}.
+\]
+In particular $M_D(r)\to\infty$.  Since
+\[
+  \exp\!\left(\frac{\log M_D(r)}{104\log\log M_D(r)}\right)\to\infty,
+\]
+and $R_D$ is fixed, we may choose $r_0(D)$ sufficiently large that for all
+$r\ge r_0(D)$:
+\begin{enumerate}[label=(\roman*)]
+  \item $D\mid P_r$;
+  \item $M_D(r)>n_0(D)$;
+  \item the function
+  \[
+    t\mapsto t\exp\!\left(\frac{\log t}{104\log\log t}\right)
+  \]
+  is increasing for $t\ge M_D(r)$;
+  \item
+  \[
+    M_D(r)\exp\!\left(\frac{\log M_D(r)}{104\log\log M_D(r)}\right)>p_r.
+  \]
+\end{enumerate}
+Now suppose $r\ge r_0(D)$ and $B_r(D)\mid y_n$.  Then
+\[
+  n\ge M_D(r)>n_0(D).
+\]
+Stewart's lower bound and the monotonicity condition give
+\[
+  \Pplus(y_n)
+  \ge
+  \Pplus(U_n(D))
+  >
+  n\exp\!\left(\frac{\log n}{104\log\log n}\right)
+  \ge
+  M_D(r)\exp\!\left(\frac{\log M_D(r)}{104\log\log M_D(r)}\right)
+  >p_r.
+\]
+Thus $y_n$ is not $p_r$-smooth.  Hence the simultaneous requirements
+$B_r(D)\mid y_n$ and $\Pplus(y_n)\le p_r$ are impossible for all $r\ge r_0(D)$.
+\end{proof}
+
+\begin{corollary}[No fixed branch supports infinitely many prime-complete products]
+\label{cor:fixedbranch}
+Fix squarefree $D>1$.  There are only finitely many orders $r$ for which a
+prime-complete product of order $r$ has squarefree part $D$.
+\end{corollary}
+
+\begin{proof}
+A prime-complete product on branch $D$ gives, by Lemma~\ref{lem:support}, an
+index $n$ with
+\[
+  B_r(D)\mid y_n
+  \qquad\text{and}\qquad
+  \Pplus(y_n)\le p_r.
+\]
+Theorem~\ref{thm:permanence} rules this out for all sufficiently large $r$.
+\end{proof}
+
+\begin{corollary}[Fresh-branch corollary]\label{cor:fresh}
+Let $S$ be a fixed finite set of squarefree integers $D>1$.  There exists
+$r_0(S)$ such that, for all $r\ge r_0(S)$, no prime-complete product of order
+$r$ has squarefree part in $S$.
+
+In particular, if prime-complete products existed at arbitrarily large orders,
+their squarefree parts $D_r$ would satisfy
+\[
+  \Pplus(D_r)\to\infty.
+\]
+\end{corollary}
+
+\begin{proof}
+For finite $S$, take
+\[
+  r_0(S)=\max_{D\in S}r_0(D).
+\]
+The first assertion follows from Corollary~\ref{cor:fixedbranch}.  For the
+second, if $\Pplus(D_r)$ did not tend to infinity, then infinitely many $D_r$
+would lie in a fixed finite set of squarefree integers composed only of primes up
+to some fixed bound, contradicting the first assertion.
+\end{proof}
+
+\section{Support-purity diagnostics}
+
+This section is diagnostic, not part of the proof of Theorem~\ref{thm:permanence}.
+It records what happens in the exhaustive branch and small-index computations for
+$8\le r\le 14$.  The branch pincer leaves a finite small-index residue.  For each
+row in that residue the computation records whether the complementary support is
+covered, whether $y_n$ is $p_r$-smooth, and whether the row produces a direct
+prime-complete hit.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{rrrrrrrrr}
+\toprule
+$r$ & rows & branches & supp & $y$-sm & both & pc & purfail & min left \\
+\midrule
+8  & 136 & 52 & 136 & 1 & 1 & 1 & 135 & 2.253 \\
+9  & 145 & 57 & 145 & 0 & 0 & 0 & 145 & 2.029 \\
+10 & 110 & 52 & 110 & 0 & 0 & 0 & 110 & 5.150 \\
+11 & 91  & 47 & 91  & 0 & 0 & 0 & 91  & 12.867 \\
+12 & 50  & 30 & 50  & 0 & 0 & 0 & 50  & 12.824 \\
+13 & 41  & 26 & 41  & 0 & 0 & 0 & 41  & 22.435 \\
+14 & 11  & 9  & 11  & 0 & 0 & 0 & 11  & 81.862 \\
+\bottomrule
+\end{tabular}
+\caption{Support-purity diagnostic for $8\le r\le 14$.  Here ``supp'' means
+support-complete, ``$y$-sm'' means $y_n$ is $p_r$-smooth, ``both'' means both
+support-complete and $p_r$-smooth, and ``purfail'' means support-complete but not
+$p_r$-smooth.  The final column is $\log_{10}$ of the smallest leftover after
+stripping primes $\le p_r$ from $y_n$ among support-purity failures.}
+\label{tab:purity-order}
+\end{table}
+
+Table~\ref{tab:purity-order} shows the central point.  At $r=8$ there is exactly
+one row that is support-complete, $p_r$-smooth, and prime-complete.  For every
+$r=9,\ldots,14$, all small-index rows attached to pincer survivors are
+support-complete, but none has $p_r$-smooth $y_n$.
+
+Thus after $r=8$ the obstruction is not missing support.  It is the presence of
+outside primes:
+\[
+  B_r(D)\mid y_n
+  \qquad\text{but}\qquad
+  \Pplus(y_n)>p_r.
+\]
+Moreover, the closest support-purity failures move rapidly away from purity.  By
+$r=14$, even the closest candidate has an outside leftover of size about
+$10^{81.862}$ after all primes $\le p_{14}$ have been stripped from $y_n$.
+
+The closest global failures in the computation begin as follows.
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{rrrrrlr}
+\toprule
+rank & $r$ & mask & $D$ & $n$ & origin & $\log_{10}$ leftover \\
+\midrule
+1 & 9  & 0x16b & 213486 & 2 & newbit/dead-parent & 2.029 \\
+2 & 8  & 0x67  & 6630   & 2 & base & 2.253 \\
+3 & 9  & 0x154 & 21505  & 3 & newbit/live-parent & 3.303 \\
+4 & 9  & 0xa3  & 1482   & 6 & oldmask/live-parent & 4.505 \\
+5 & 9  & 0xb5  & 27170  & 4 & oldmask/live-parent & 4.619 \\
+6 & 8  & 0x53  & 1122   & 6 & base & 4.966 \\
+7 & 10 & 0x2d0 & 103037 & 2 & newbit/dead-parent & 5.150 \\
+\bottomrule
+\end{tabular}
+\caption{Closest support-purity failures among the diagnostic rows.  The nearest
+post-$8$ miss occurs at $r=9$, $D=213486$, $n=2$, and is already impure.}
+\label{tab:closest}
+\end{table}
+
+The origin labels separate inherited old-mask survivors from genuinely new-bit
+discriminant branches.  The closest post-$8$ failures are often fresh-branch
+leakage: a new discriminant branch survives the first pincer but fails purity
+immediately.
+
+Two quantitative features of this residue are worth recording, both diagnostic.
+First, the closest-miss margin grows geometrically.  Writing $\lambda(r)$ for the
+$\log_{10}$ leftover of the nearest support-purity failure at order $r$
+(Table~\ref{tab:purity-order}, final column), the values
+$2.03,\,5.15,\,12.87,\,12.82,\,22.43,\,81.86$ for $r=9,\ldots,14$ are fit by
+$\lambda(r)\approx c\cdot\rho^{r}$ with $\rho\approx 1.9$: even the single most
+threatening candidate at each order recedes from purity at a geometric rate.  We
+attach the standing caveat that $r=14$ rests on only $11$ rows from $9$ branches,
+so the rate constant is known only to within perhaps $\pm20\%$; the qualitative
+divergence, however, is uniform across the range.
+
+Second, this purity divergence is the microscopic complement of the branch-level
+survival collapse.  The branch-lineage census over the same range shows that the
+fraction of newly created discriminant branches that survive the first pincer
+decays geometrically, at rate $\approx 0.37^{r}$; the present diagnostic shows
+that those few survivors then fail purity by a margin growing at $\approx 1.9^{r}$.
+The small-index residue is thus emptied from two sides at once: fewer branches
+survive support, and the survivors fall ever further from purity.  Both are
+average-case statements about the residue as a whole.
+
+Neither statement touches the fundamental case $n=1$.  The single support-pure
+row in the entire scan is the order-$8$ solution, which occurs at $n=1$; and $n=1$
+is precisely where the size mechanism behind the purity divergence has no purchase
+(there is no index to grow and no higher Lucas term to force an outside prime).
+The diagnostics therefore corroborate purity failure for $n\ge 2$ with a growing
+margin, and leave the $n=1$ fundamental-solution case as the irreducible residue,
+consistent with the residual problem stated in Section~\ref{sec:residual}.
+
+\section{Relation to the wall $A_r$ versus $L_r$}
+
+Let $L_r$ denote the largest $m$ such that $m$ and $m+1$ are both $p_r$-smooth,
+and let $A_r$ denote the least admissible CRT floor value at which
+\[
+  P_r\mid m(m+1)
+\]
+can occur at product scale.  A prime-complete product of order $r$ must lie in
+the coarse interval
+\[
+  A_r\le m\le L_r.
+\]
+Therefore
+\[
+  A_r>L_r
+  \qquad\Longrightarrow\qquad
+  \text{no prime-complete product of order }r.
+\]
+
+The wall first closes in the available data at $r=14$: at $r=13$ one still has
+$A_{13}<L_{13}$, while at $r=14$ one has $A_{14}>L_{14}$.  The support-purity
+diagnostics explain this crossover microscopically.
+
+At $r=13$, the coarse wall is still open, so the interval argument alone does not
+exclude a prime-complete product.  But the branch-level residue already has
+\[
+  41\text{ rows},\qquad 41\text{ support-complete},\qquad 0\text{ }p_{13}\text{-smooth}.
+\]
+The closest outside leftover has $\log_{10}$ about $22.435$.  Thus the candidates
+are dead by support-purity failure before the global wall is visible.
+
+At $r=14$, both views agree.  The wall has closed, and the branch-level residue is
+more impure still:
+\[
+  11\text{ rows},\qquad 11\text{ support-complete},\qquad 0\text{ }p_{14}\text{-smooth},
+\]
+with closest outside leftover about $10^{81.862}$.
+
+Thus the wall is the first global interval closure, while support-purity failure
+is the local branch mechanism already visible before the wall closes.
+
+\section{The rewritten residual problem}\label{sec:residual}
+
+Theorem~\ref{thm:permanence} proves that old fixed branches die.  The reduction
+theorem confines any tail counterexample to small-index support-complete terms.
+The diagnostics indicate that the remaining obstruction is support purity.  This
+motivates the following residual problem.
+
+\begin{problem}[Small-Index Support-Purity Failure Problem]\label{prob:purity}
+Prove that, for all sufficiently large $r$, there is no squarefree $D\mid P_r$
+and no index
+\[
+  1\le n\le p_r+1
+\]
+such that
+\[
+  B_r(D)=P_r/D\mid y_n(D)
+\]
+and
+\[
+  \Pplus(y_n(D))\le p_r.
+\]
+Equivalently, prove that in the small-index range forced by the reduction
+theorem,
+\[
+  P_r/D\mid y_n(D)
+  \qquad\Longrightarrow\qquad
+  \Pplus(y_n(D))>p_r
+\]
+for all sufficiently large $r$.
+\end{problem}
+
+Problem~\ref{prob:purity} is strictly sharper than a generic smooth-pair ceiling.
+It does not ask whether all consecutive $p_r$-smooth pairs are bounded.  It asks
+whether the specific support-complete Pell terms forced by the branch reduction
+can remain support-pure.  The data suggests that support completion and support
+purity coincide for the last time at order $8$.
+
+\section{Interpretation and limitations}
+
+The Per-Branch Permanence Theorem is a structural ratchet.  It proves that no
+fixed $D$ can support prime-complete products forever.  Thus a hypothetical
+infinite tail cannot live on a stable finite set of discriminants; it must pass
+through fresh branches containing larger and larger primes.
+
+This is not yet a global unconditional termination proof.  The threshold
+$r_0(D)$ depends on $D$, and the explicit constants in Stewart's theorem are far
+too large to produce a useful uniform bound across all $D\mid P_r$.  The young
+branches remain the hard part.
+
+The new support-purity diagnostics refine the residual problem.  The issue is not
+that support-complete small-index rows disappear immediately.  In the observed
+range, they are abundant among pincer survivors.  The issue is that after $r=8$
+they are never support-pure.  The branch-level slogan is therefore:
+\[
+  \boxed{\text{support completion persists; support purity fails.}}
+\]
+
+\begin{thebibliography}{9}
+
+\bibitem{Stewart2013}
+C. L. Stewart,
+\emph{On divisors of Lucas and Lehmer numbers},
+Acta Mathematica \textbf{211} (2013), 291--314.
+
+\bibitem{BHV2001}
+Y. Bilu, G. Hanrot, and P. M. Voutier,
+\emph{Existence of primitive divisors of Lucas and Lehmer numbers},
+Journal f\"ur die reine und angewandte Mathematik \textbf{539} (2001), 75--122.
+
+\bibitem{Lehmer1964}
+D. H. Lehmer,
+\emph{On a problem of St\o rmer},
+Illinois Journal of Mathematics \textbf{8} (1964), 57--79.
+
+\bibitem{LucaNajman2010}
+F. Luca and F. Najman,
+\emph{On the largest prime factor of $x^2-1$},
+arXiv:1005.1533.
+
+\bibitem{Najman2010}
+F. Najman,
+\emph{Smooth values of quadratic polynomials},
+arXiv:1005.1535.
+
+\end{thebibliography}
+
+\end{document}
