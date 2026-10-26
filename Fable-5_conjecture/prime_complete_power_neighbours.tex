@@ -1,0 +1,661 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{target}[theorem]{Target}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\Pplus}{P^{+}}
+\newcommand{\verify}[1]{{\color{red!70!black}\,[verify: #1]}}
+
+\title{Prime-Complete Neighbours of Perfect Powers\\[4pt]
+\large A conjecture, computational evidence, and a residue-class obstruction}
+\author{Claude (Anthropic)\thanks{The conjecture was proposed by Claude in the
+course of a collaboration with Ken Clements on OEIS A141399 (October 2026).
+Clements supplied the A141399 framework, the certified A141399 range quoted in
+Corollary~\ref{cor:even}, and the OEIS generator that the enumeration program
+modifies. All computations reported here were run by Claude. Attribution and
+authorship of any circulated version are to be settled by K.~Clements.}}
+\date{Draft, 22 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A positive integer is \emph{prime-complete} if its prime divisors are exactly
+the first $r$ primes for some $r$. We conjecture that for $k\ge3$ and $y\ge2$
+the numbers $y^k-1$ and $y^k+1$ are prime-complete only for
+$7^4-1=2400=2^5\cdot3\cdot5^2$. For even $k$ the conjecture reduces exactly to
+a subcase of the OEIS sequence A141399 (prime-complete products $m(m+1)$), and
+holds for $y^{k/2}<9.49\times10^{29}$. For odd $k$ we prove a residue-class
+obstruction: the primes $q\le p_r$ with $\gcd(q-1,k)=1$ must all divide
+$y\mp1$, which forces $y\ge P_r^{\delta_k+o(1)}$ and forces the cyclotomic
+cofactor to carry average prime exponent at least $(k-1)\delta_k/(1-\delta_k)$
+(equal to $2$ for $k=3$). Using Bennett's theorem on $|ax^n-by^n|=1$ we show
+that at most $k^r-1$ values of $y$ make $y^k\pm1$ smooth over the first $r$
+primes, and we classify them completely for $k=3$, $r\le8$ (unconditionally for
+$r\le6$, under GRH for $r=7,8$). Assuming the
+$abc$ conjecture, the conjecture holds up to finitely many exceptions for every
+fixed odd $k\ge5$; the case $k=3$ is exactly $abc$-critical, and is settled
+under $abc$ together with an explicit lower bound for the least nontrivial
+cube root of $\pm1$ modulo the primorial, which holds with room on all computed
+data. All prime-complete numbers below $10^{30}$ (about $4.6\times10^8$ of them)
+were tested; the only example is $2400$.
+\end{abstract}
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction}
+% =====================================================================
+
+Let $p_r$ be the $r$-th prime, $P_r=p_1p_2\cdots p_r$ the $r$-th primorial,
+$\theta(x)=\sum_{p\le x}\log p$ and $\rad(n)=\prod_{p\mid n}p$.
+
+\begin{definition}
+An integer $N\ge2$ is \emph{prime-complete of order $r$} if $\rad(N)=P_r$.
+\end{definition}
+
+The prime-complete numbers form OEIS A055932~\cite{A055932}. The sequence
+A141399~\cite{A141399} lists the $m$ for which $m(m+1)$ is prime-complete; it
+has $28$ known terms, the largest $m=633555$, and its termination is an open
+problem that contains the classical question of which primorials are products
+of two consecutive integers~\cite{NPP}. Equivalently, A141399 asks when
+$x^2-1$ is prime-complete for odd $x=2m+1$.
+
+Clements has conjectured that A141399 is the ``poster child'' of a general
+phenomenon: a polynomial generator with integer roots that is not 
+a constant multiple of a perfect
+power should have only finitely many prime-complete values. Polynomials that split into
+linear factors give $S$-unit equations, which is why A141399 can be attacked by
+Pell equations. This note studies the simplest family that is \emph{not}
+split but is still \emph{intersective} (has a root modulo every prime): the
+polynomials $x^k\pm1$.
+
+\begin{conjecture}\label{conj:main}
+Let $y\ge2$ and $k\ge3$. Then $y^k-1$ and $y^k+1$ are prime-complete only for
+\[
+7^4-1=2400=2^5\cdot3\cdot5^2\qquad(r=3).
+\]
+\end{conjecture}
+
+\paragraph{Results.}
+\begin{enumerate}
+\item \emph{Even $k$} (\S\ref{sec:even}). $y^k+1$ is never prime-complete, and
+$y^k-1$ is prime-complete exactly when $m=(y^{k/2}-1)/2$ is a term of A141399.
+The conjecture therefore holds for even $k$ whenever $y^{k/2}<9.49\times10^{29}$.
+\item \emph{Odd $k$: a residue-class obstruction} (\S\ref{sec:odd}).
+Lemma~\ref{lem:Q} forces $y\equiv\pm1$ modulo every prime $q\le p_r$ with
+$\gcd(q-1,k)=1$, and Proposition~\ref{prop:demand} shows that the remaining
+cyclotomic factor must then be ``nearly powerful'' on the other residue classes.
+\item \emph{Counting and exact classification} (\S\ref{sec:bennett}). By
+Bennett's theorem, at most $k^r-1$ integers $y\ge2$ make $y^k\pm1$ smooth over
+the first $r$ primes. For $k=3$ we list them all for $r\le8$, and a squeeze
+argument modelled on A141399 shows the cubic ``wall'' is closed at every
+computed order.
+\item \emph{Conditional results} (\S\ref{sec:conditional}). The $abc$ conjecture
+implies finiteness for each fixed odd $k\ge5$. The case $k=3$ is exactly
+$abc$-critical; $abc$ plus a lower bound for the cubic floor settles it.
+\item \emph{Evidence} (\S\ref{sec:evidence}) and \emph{a programme for a proof}
+(\S\ref{sec:path}).
+\end{enumerate}
+
+% =====================================================================
+\section{Even exponents}\label{sec:even}
+% =====================================================================
+
+\begin{proposition}\label{prop:plus-even}
+If $k\ge2$ is even and $y\ge2$, then $y^k+1$ is not prime-complete.
+\end{proposition}
+\begin{proof}
+Since $y^k$ is a square, $y^k\equiv0$ or $1\pmod3$, so $3\nmid y^k+1$. A
+prime-complete number not divisible by $3$ has order $1$, i.e. $y^k+1=2^a$.
+Then $y$ is odd, $y^k\equiv1\pmod8$, $y^k+1\equiv2\pmod8$, so $y^k+1=2$,
+impossible for $y\ge2$.
+\end{proof}
+
+\begin{proposition}\label{prop:minus-even}
+Let $k=2j$ with $j\ge2$ and $y\ge2$. Then $y^k-1$ is prime-complete if and only
+if $y$ is odd and $m:=(y^j-1)/2$ is a term of A141399; the orders agree.
+\end{proposition}
+\begin{proof}
+If $y$ is even, $y^k-1$ is odd and greater than $1$, hence not prime-complete.
+If $y$ is odd, put $x=y^j=2m+1$. Then $y^k-1=x^2-1=4m(m+1)$, and since
+$m(m+1)$ is even, $\rad(4m(m+1))=\rad(m(m+1))$.
+\end{proof}
+
+\begin{corollary}\label{cor:even}
+Among the $28$ known terms of A141399 the only $m$ with $2m+1$ a perfect power
+is $m=24$ ($2m+1=49=7^2$), which gives $7^4-1=2400$. A capped Pell enumeration
+of all consecutive $p_{35}$-smooth pairs with $m\le U_{35}$ (Clements, 2026,
+unpublished; a prime-complete pair with $m(m+1)<P_{36}$ has order at most $35$) shows that A141399 has no term $m$ with
+$633555<m\le U_{35}=474678348981529994249378640941$. Hence
+Conjecture~\ref{conj:main} holds for every even $k$ with
+$y^{k/2}\le 2U_{35}+1\approx9.49\times10^{29}$, and for all even $k$ if
+A141399 has no further terms.
+\end{corollary}
+
+So the even case is a refinement of A141399 (a term whose Pell abscissa
+$2m+1$ is a perfect power) and contains nothing new. The new content of the
+conjecture is odd $k$.
+
+% =====================================================================
+\section{Odd exponents: the residue-class obstruction}\label{sec:odd}
+% =====================================================================
+
+Throughout this section $k\ge3$ is odd. Define
+\[
+Q_k(r)=\prod_{\substack{q\le p_r\\ \gcd(q-1,\,k)=1}}q,\qquad
+\delta_k=\prod_{\ell\mid k}\frac{\ell-2}{\ell-1}\quad(\ell\text{ prime}).
+\]
+Note that $2\mid Q_k(r)$, and $3\mid Q_k(r)$ once $p_r\ge3$, for every odd $k$ (since $q-1\in\{1,2\}$).
+
+\begin{lemma}[complementary classes divide $y\mp1$]\label{lem:Q}
+Suppose $y^k-1$ (resp.\ $y^k+1$) is prime-complete of order $r$. Then $y$ is
+odd, $\gcd(y,P_r)=1$, and
+\[
+Q_k(r)\mid y-1\qquad(\text{resp. } Q_k(r)\mid y+1).
+\]
+In particular $y\ge Q_k(r)+1$ (resp.\ $y\ge Q_k(r)-1$).
+\end{lemma}
+\begin{proof}
+Every $q\le p_r$ divides $y^k\mp1$, so $q\nmid y$; and $2\mid y^k\mp1$ forces
+$y$ odd, so $2\mid y\mp1$. Let $q\le p_r$ be odd with $\gcd(q-1,k)=1$, and let
+$t=\ord_q(y)$, so $t\mid q-1$.
+For $y^k\equiv1$: $t\mid\gcd(k,q-1)=1$, so $y\equiv1\pmod q$.
+For $y^k\equiv-1$: $t\mid 2k$ and $t\nmid k$; since $\gcd(2k,q-1)\mid2$, we get
+$t=2$ and $y\equiv-1\pmod q$.
+\end{proof}
+
+\begin{lemma}\label{lem:density}
+For fixed odd $k$, $\log Q_k(r)=(\delta_k+o(1))\,\theta(p_r)$ as $r\to\infty$.
+\end{lemma}
+\begin{proof}
+For $q\nmid k$, the condition $\gcd(q-1,k)=1$ says $q\not\equiv1\pmod\ell$ for
+each prime $\ell\mid k$; it depends only on $q$ modulo $\rad(k)$ and holds in
+a proportion $\prod_{\ell\mid k}(\ell-2)/(\ell-1)$ of the reduced classes. Apply
+the prime number theorem in arithmetic progressions.
+\end{proof}
+
+\begin{proposition}[valuation demand]\label{prop:demand}
+Suppose $y^k-1$ is prime-complete of order $r$ and put
+$C(y)=(y^k-1)/(y-1)$. Every prime factor $q$ of $C(y)$ satisfies $q\le p_r$ and
+either $q\mid k$ or $\gcd(q-1,k)>1$, and $C(y)>Q_k(r)^{k-1}$. The same holds for
+$y^k+1$ with $C(y)=(y^k+1)/(y+1)$ and the bound $C(y)\ge(Q_k(r)-2)^{k-1}$.
+\end{proposition}
+\begin{proof}
+Let $q\le p_r$ with $q\nmid k$ and $\gcd(q-1,k)=1$. By Lemma~\ref{lem:Q},
+$y\equiv1\pmod q$, so $C(y)=\sum_{i<k}y^i\equiv k\not\equiv0\pmod q$. The size
+bound follows from $C(y)>y^{k-1}$ and $y>Q_k(r)$. The $y^k+1$ case is identical
+with $y\equiv-1$, $C(y)=\sum_{i<k}(-y)^i$ and
+$C(y)\ge y^{k-2}(y-1)\ge(y-1)^{k-1}$.
+\end{proof}
+
+\begin{corollary}[the case $k=3$]\label{cor:k3}
+If $y^3-1$ is prime-complete of order $r$, then $\Phi_3(y)=y^2+y+1$ equals
+$3\prod_{q\equiv1\,(3)}q^{v_q}$ with all $q\le p_r$, and
+\[
+\sum_{\substack{q\le p_r\\ q\equiv1\,(3)}}v_q\log q\;>\;2\log Q_3(r)-\log 3 .
+\]
+Consequently the $\log q$-weighted mean of the exponents $v_q$ over all primes
+$q\equiv1\pmod3$ up to $p_r$ is at least
+\[
+\mu_3(r):=\frac{2\log Q_3(r)-\log3}{\theta(p_r;3,1)}\;\longrightarrow\;2 .
+\]
+The same holds for $y^3+1$ with $\Phi_6(y)=y^2-y+1$ and $Q_3(r)-2$ in place
+of $Q_3(r)$.
+\end{corollary}
+\begin{proof}
+Here $y\equiv1\pmod3$, so $\Phi_3(y)\equiv3\pmod9$ and $v_3(\Phi_3(y))=1$.
+The limit follows from Lemma~\ref{lem:density} with $\delta_3=\tfrac12$ and
+$\theta(x;3,1)\sim\tfrac12\theta(x)$.
+\end{proof}
+
+For general odd $k$ the same argument gives a mean exponent of at least
+$(k-1)\delta_k/(1-\delta_k)+o(1)$ on the admissible classes: $2$ for $k=3$,
+$12$ for $k=5$, $30$ for $k=7$, $8$ for $k=9$. Table~\ref{tab:tax} shows the
+convergence.
+
+\begin{table}[ht]
+\centering
+\caption{The residue-class tax. $\log Q_k/\theta$ is the proved lower bound for
+$\log y/\log P_r$ (Lemma~\ref{lem:Q}); $\mu_3$ is the required mean exponent of
+$\Phi_3(y)$ (Corollary~\ref{cor:k3}). Limits: $\delta_3=\tfrac12$,
+$\delta_5=\tfrac34$, $\delta_7=\tfrac56$, $\mu_3\to2$.}
+\label{tab:tax}
+\begin{tabular}{rrcccc}
+\toprule
+$p_r$ & $r$ & $\log Q_3/\theta$ & $\mu_3$ & $\log Q_5/\theta$ & $\log Q_7/\theta$\\
+\midrule
+47 & 15 & 0.554 & 2.43 & 0.767 & 0.826\\
+97 & 25 & 0.525 & 2.18 & 0.786 & 0.864\\
+199 & 46 & 0.524 & 2.19 & 0.773 & 0.861\\
+997 & 168 & 0.518 & 2.15 & 0.758 & 0.827\\
+9973 & 1229 & 0.501 & 2.01 & 0.750 & 0.834\\
+99991 & 9592 & 0.501 & 2.01 & 0.751 & 0.834\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[why $k=2$ pays no tax]
+For $x^2-1=(x-1)(x+1)$ both factors are linear, so every prime may divide
+either, and no residue class is forced into a factor that is too small to hold
+it. This is the precise sense in which A141399 is the \emph{hardest} member of
+the family $x^k\pm1$. Each non-linear irreducible factor of an intersective
+polynomial is supported on Frobenius-restricted classes and pays a tax of this
+kind.
+\end{remark}
+
+\begin{example}
+``Nearly square'' values of $\Phi_3$ are plentiful: the Pell family
+$(2y+1)^2-12z^2=-3$ gives $y^2+y+1=3z^2$ infinitely often, e.g.\ $y=22$,
+$\Phi_3(22)=507=3\cdot13^2$. So the obstruction is not powerfulness by itself.
+It is powerfulness \emph{on one residue class}, combined with the size forced by
+Lemma~\ref{lem:Q}.
+\end{example}
+
+% =====================================================================
+\section{Counting and exact classification}\label{sec:bennett}
+% =====================================================================
+
+\begin{theorem}[Bennett~\cite{Bennett}]\label{thm:bennett}
+If $a,b,n$ are positive integers with $n\ge3$, the equation $|ax^n-by^n|=1$ has
+at most one solution in positive integers.
+\end{theorem}
+
+\begin{corollary}\label{cor:count}
+For $k\ge3$ and $r\ge1$, at most $k^r-1$ integers $y\ge2$ have $y^k-1$ or
+$y^k+1$ smooth over $\{p_1,\dots,p_r\}$.
+\end{corollary}
+\begin{proof}
+Write $y^k\mp1=dw^k$ with $d$ $k$-th-power-free and $p_r$-smooth; there are
+$k^r$ such $d$. Then $(y,w)$ is a positive solution of $|x^k-dY^k|=1$, so each
+$d$ yields at most one $y$, across both signs. For $d=1$ there is none.
+\end{proof}
+
+For $k=2$ the corresponding count is weaker: Lehmer's method allows up to
+$\max(3,(p_r+1)/2)$ solutions per Pell class~\cite{Lehmer}. For $k\ge3$ each
+class carries at most one, and it is found by solving one Thue equation. For
+$k=3$ this is the classical theorem of Delone and Nagell (see~\cite{Mordell}
+\verify{chapter}), and since $x-Y\sqrt[3]{d}$ is a unit of a field of unit rank one, the solution
+is a power of its fundamental unit.
+
+\paragraph{Algorithm.} For each cube-free $p_r$-smooth $d>1$, solve
+$x^3-dY^3=1$ (PARI/GP \texttt{thue}~\cite{PARI}, which implements the
+Bilu--Hanrot method~\cite{BiluHanrot}). Each solution with $Y\ne0$ and
+$|x|\ge2$ gives $y=|x|$ with $y^3-1=dY^3$ ($x>0$) or $y^3+1=d|Y|^3$ ($x<0$).
+Keep those with $Y$ $p_r$-smooth.
+
+\begin{theorem}[computation]\label{thm:k3list}
+For $r\le6$ unconditionally, and for $r\le8$ assuming the generalized Riemann
+hypothesis (used by the class-group computations inside \texttt{thue}), the
+integers $y\ge2$ with $y^3-1$ or $y^3+1$ smooth over the first $r$ primes are
+exactly those in Table~\ref{tab:k3list}. None is prime-complete.
+\end{theorem}
+
+Independently, a direct search over $y\le3\times10^6$ finds exactly the same
+$21$ values for $19$-smooth $y^3\pm1$.
+
+\begin{table}[ht]
+\centering
+\caption{All $y\ge2$ with $y^3\mp1$ smooth over the primes up to $19$
+($r\le8$). ``Order'' is $\pi(\Pplus(y^3\mp1))$.}
+\label{tab:k3list}
+\small
+\begin{tabular}{rlrr@{\qquad}rlrr}
+\toprule
+$y$ & form & $d$ & order & $y$ & form & $d$ & order\\
+\midrule
+2 & $y^3+1$ & 9 & 2 & 11 & $y^3-1$ & 1330 & 8\\
+2 & $y^3-1$ & 7 & 4 & 12 & $y^3+1$ & 1729 & 8\\
+3 & $y^3+1$ & 28 & 4 & 16 & $y^3-1$ & 4095 & 6\\
+3 & $y^3-1$ & 26 & 6 & 17 & $y^3+1$ & 182 & 6\\
+4 & $y^3+1$ & 65 & 6 & 18 & $y^3-1$ & 17 & 7\\
+4 & $y^3-1$ & 63 & 4 & 19 & $y^3+1$ & 20 & 4\\
+5 & $y^3+1$ & 126 & 4 & 22 & $y^3-1$ & 10647 & 6\\
+7 & $y^3-1$ & 342 & 8 & 23 & $y^3+1$ & 1521 & 6\\
+8 & $y^3+1$ & 19 & 8 & 31 & $y^3+1$ & 3724 & 8\\
+9 & $y^3-1$ & 91 & 6 & 69 & $y^3+1$ & 328510 & 8\\
+10 & $y^3+1$ & 1001 & 6 & & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The cubic squeeze}
+The method that controls A141399 at small orders transfers directly. Define the
+\emph{cubic floor} and \emph{cubic ceiling}
+\begin{align*}
+A_3^{\mp}(r)&=\min\{y>1:\ y^3\equiv\pm1\!\!\pmod{P_r}\},\\
+L_3(r)&=\max\{y\ge2:\ y^3-1\text{ or }y^3+1\text{ is }p_r\text{-smooth}\}.
+\end{align*}
+A prime-complete $y^3\mp1$ of order $r$ satisfies
+$A_3^{\mp}(r)\le y\le L_3(r)$, the analogue of
+$\mathrm{A118478}(r)\le m\le\mathrm{A002072}(r)$ for A141399.
+
+The floor is cheap to compute exactly. By Lemma~\ref{lem:Q},
+$y\equiv\pm1\pmod{Q_3(r)}$, and modulo each prime $q\equiv1\pmod 3$ there are
+three admissible classes, so there are $3^{\pi(p_r;3,1)}$ roots to compare.
+The ceiling is the expensive side (Theorem~\ref{thm:k3list}).
+
+\begin{table}[ht]
+\centering
+\caption{The cubic squeeze. The wall $A_3>L_3$ holds at every order, unlike
+A141399, where it first closes at $r=14$.}
+\label{tab:squeeze}
+\begin{tabular}{rrrrrr}
+\toprule
+$r$ & $p_r$ & roots & $A_3^-(r)$ & $A_3^+(r)$ & $L_3(r)$\\
+\midrule
+1 & 2 & 1 & 3 & 3 & --\\
+2 & 3 & 1 & 7 & 5 & 2\\
+3 & 5 & 1 & 31 & 29 & 2\\
+4 & 7 & 3 & 121 & 59 & 19\\
+5 & 11 & 3 & 331 & 1319 & 19\\
+6 & 13 & 9 & 991 & 4289 & 23\\
+7 & 17 & 9 & 145861 & 50489 & 23\\
+8 & 19 & 27 & 241231 & 639539 & 69\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The floor was computed exactly through $r=32$. Writing
+$\alpha^{\mp}(r)=\log A_3^{\mp}(r)/\log P_r$, we find
+\[
+\min_{4\le r\le32}\alpha^{\mp}(r)=0.669\ (r=6),\qquad
+\min_{14\le r\le32}\alpha^{\mp}(r)=0.806,
+\]
+against the proved bound $\log Q_3(r)/\log P_r\approx\tfrac12$ of
+Lemma~\ref{lem:Q}. Heuristically the least of $3^{\pi(p_r;3,1)}=P_r^{o(1)}$
+roots lies near $P_r^{1-o(1)}$, so $\alpha(r)\to1$.
+
+% =====================================================================
+\section{Conditional results}\label{sec:conditional}
+% =====================================================================
+
+Recall the $abc$ conjecture~\cite{Masser,Oesterle}: for every $\varepsilon>0$
+there is $K_\varepsilon$ such that coprime positive $a+b=c$ satisfy
+$c<K_\varepsilon\rad(abc)^{1+\varepsilon}$.
+
+\begin{lemma}\label{lem:kdelta}
+For odd $k\ge5$, $(k-1)\delta_k>1$; for $k=3$, $(k-1)\delta_k=1$.
+\end{lemma}
+\begin{proof}
+Each factor $(\ell-2)/(\ell-1)\ge\frac12$ and $3^{\omega(k)}\le k$, so
+$\delta_k\ge2^{-\omega(k)}\ge k^{-\log2/\log3}$. The function
+$(k-1)k^{-\log2/\log3}$ is increasing and equals $1.45$ at $k=5$. For $k=3$,
+$\delta_3=\frac12$.
+\end{proof}
+
+\begin{theorem}\label{thm:abc}
+Assume $abc$. For each fixed odd $k\ge5$, only finitely many pairs $(y,r)$ have
+$y^k-1$ or $y^k+1$ prime-complete of order $r$.
+\end{theorem}
+\begin{proof}
+Apply $abc$ to $(1,y^k-1,y^k)$ or $(1,y^k,y^k+1)$. The radical is
+$P_r\rad(y)\le P_ry$, so
+\begin{equation}\label{eq:abc}
+(k-1-\varepsilon)\log y<(1+\varepsilon)\,\theta(p_r)+\log K_\varepsilon .
+\end{equation}
+By Lemmas~\ref{lem:Q} and~\ref{lem:density}, $\log y\ge(\delta_k-\eta)\theta(p_r)$
+for $r\ge r_1(k,\eta)$. Substituting,
+$\bigl[(k-1-\varepsilon)(\delta_k-\eta)-(1+\varepsilon)\bigr]\theta(p_r)<\log K_\varepsilon$.
+By Lemma~\ref{lem:kdelta} the bracket is positive for small $\varepsilon,\eta$,
+so $r$ is bounded; for each $r$, \eqref{eq:abc} bounds $y$.
+\end{proof}
+
+\begin{proposition}[$k=3$ is $abc$-critical]\label{prop:critical}
+Under $abc$, \eqref{eq:abc} gives $\log y\le(\tfrac12+O(\varepsilon))\theta(p_r)+O_\varepsilon(1)$,
+while Lemma~\ref{lem:Q} gives $\log y\ge(\tfrac12-o(1))\theta(p_r)$. The window
+is nonempty for every $\varepsilon>0$, so $abc$ alone does not decide $k=3$. The
+same happens with Langevin's consequence of $abc$~\cite{Langevin,Elkies},
+$\rad(y^3\mp1)\gg_\varepsilon y^{2-\varepsilon}$.
+\end{proposition}
+
+\begin{theorem}\label{thm:abcfloor}
+Assume $abc$, and assume there is $c>0$ with
+\[
+\log A_3^{\mp}(r)\ \ge\ \bigl(\tfrac12+c\bigr)\,\theta(p_r)\qquad\text{for all large }r .
+\tag{F$_3$}
+\]
+Then only finitely many $(y,r)$ have $y^3\mp1$ prime-complete of order $r$.
+\end{theorem}
+\begin{proof}
+A prime-complete $y^3\mp1$ of order $r$ has $y\ge A_3^{\mp}(r)$, so
+(F$_3$) and \eqref{eq:abc} with $k=3$ give
+$(2-\varepsilon)(\tfrac12+c)\theta<(1+\varepsilon)\theta+O_\varepsilon(1)$,
+which fails for large $r$ once $\varepsilon<c/(1+c)$.
+\end{proof}
+
+\begin{remark}[comparison with A141399]
+For A141399, $abc$ caps $m$ at $P_r^{1+\varepsilon}$, while even the expected
+size $P_r^{1-o(1)}$ of the floor $\mathrm{A118478}(r)$ lies below that cap; so
+$abc$ plus any floor bound fails to close it, and a support-sensitive strengthening of $abc$ is needed. For
+$k=3$, $abc$ caps $y$ at $P_r^{1/2+\varepsilon}$ while the computed floor
+exponent is above $0.8$, so $abc$ plus a modest floor bound suffices. In this
+precise sense the cubic case is strictly easier than A141399.
+\end{remark}
+
+\begin{remark}[$xyz$ applies only partially]
+By Lemma~\ref{lem:Q}, every prime factor of $y$ exceeds $p_r$, so the triple
+$(1,y^k\mp1,y^k)$ is never $p_r$-smooth. The Lagarias--Soundararajan $xyz$
+conjecture~\cite{LS}, which implies finiteness of A141399, controls only those
+solutions in which $y$ has no large prime factor, and nothing in the problem
+prevents $\Pplus(y)$ from being large.
+\end{remark}
+
+\begin{table}[ht]
+\centering
+\caption{What each conjecture decides.}
+\label{tab:status}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Case & $abc$ & $xyz$\\
+\midrule
+$k=2$ (A141399) & silent (quality $<1$) & finite\\
+even $k\ge4$ & as A141399 & finite (via A141399)\\
+$k=3$ & critical; finite with (F$_3$) & only when $y$ is smooth\\
+odd $k\ge5$, fixed & finite (Theorem~\ref{thm:abc}) & only when $y$ is smooth\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =====================================================================
+\section{A heuristic expected count}\label{sec:heuristic}
+% =====================================================================
+
+Model $y$ as random among integers with $y^k\equiv1\pmod{P_r}$, a set of
+density $G_k(r)/P_r$ with $G_k(r)=\prod_{q\le p_r}\gcd(k,q-1)=P_r^{o(1)}$, and
+model the cofactor $t=(y^k-1)/P_r$ as a random integer of its size. In the
+relevant range $\log t\asymp p_r$, so the probability that $t$ is $p_r$-smooth
+is $t^{-1+o(1)}$ (de Bruijn~\cite{deBruijn}; see also~\cite{Granville}). Summing over dyadic
+ranges $Y\ge Q_k(r)$,
+\[
+E_k(r)\approx\sum_{Y}\frac{Y\,G_k(r)}{P_r}\Bigl(\frac{Y^k}{P_r}\Bigr)^{-1+o(1)}
+=\exp\Bigl(-\bigl((k-1)\delta_k+o(1)\bigr)\theta(p_r)\Bigr),
+\]
+dominated by $Y\approx Q_k(r)$. For $k=3$ this is $P_r^{-1+o(1)}$, compared
+with $P_r^{-1/2+o(1)}$ for the same model applied to A141399. Given the exact
+classification through $r=8$, the expected number of cubic examples at all
+larger orders is about $\sum_{r\ge9}P_r^{-1}\approx5\times10^{-9}$. This is a
+heuristic, not a proof: it assumes the cofactors behave like random integers,
+which is exactly what the arithmetic of exceptional valuations could violate
+(for instance $7^2+1=2\cdot5^2$ in the one known example).
+
+% =====================================================================
+\section{Computational evidence}\label{sec:evidence}
+% =====================================================================
+
+All computations used Python~3.13 with \texttt{gmpy2} and \texttt{sympy}, and
+PARI/GP~2.17.2 through \texttt{cypari2}.
+
+\begin{enumerate}
+\item[(E1)] \emph{Direct search over $y$.} Both signs, $y\le2\times10^7$ for
+$k=3,4,5,6$, and $y\le10^6$ for $7\le k\le64$. Only $7^4-1$.
+\item[(E2)] \emph{All prime-complete numbers below $10^{30}$.} Every
+prime-complete $N\le10^{30}$ ($459{,}890{,}353$ numbers) was enumerated by
+exponent vector, and $N\pm1$ tested for being a perfect $k$-th power with
+$k\ge3$. Only $N=2400$. As a control, testing $N+1$ for squares recovers all
+$28$ terms of A141399. The program extends the A141399 generator of
+Chai~Wah~Wu~\cite{A141399}.
+\item[(E3)] \emph{Exact classification for $k=3$}, $r\le8$
+(Theorem~\ref{thm:k3list}), with an independent direct-search check.
+\item[(E4)] \emph{Cubic floor} computed exactly through $r=32$
+(\S\ref{sec:bennett}).
+\end{enumerate}
+
+\begin{table}[ht]
+\centering
+\caption{Combined coverage: every $y$ in range has been tested for both
+$y^k-1$ and $y^k+1$.}
+\label{tab:coverage}
+\begin{tabular}{lll}
+\toprule
+$k$ & range of $y$ & source\\
+\midrule
+$3$ & $y\le10^{10}$; all $y$ at orders $r\le8$ & (E2), (E3)\\
+$4$ & $y\le3.16\times10^7$ & (E2)\\
+$5,6$ & $y\le2\times10^7$ & (E1)\\
+$7\le k\le64$ & $y\le10^6$ & (E1)\\
+$k\ge65$ & $y^k\le10^{30}$ & (E2)\\
+even $k$ & $y^{k/2}\le9.49\times10^{29}$ & Corollary~\ref{cor:even}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A magnitude bound mostly covers small orders: by Lemma~\ref{lem:Q}, at order $r$
+a solution needs $y\ge Q_k(r)\approx P_r^{\delta_k}$. That is why (E3), which is
+exhaustive per order regardless of the size of $y$, is the stronger form of
+evidence for $k=3$.
+
+% =====================================================================
+\section{A programme for a proof}\label{sec:path}
+% =====================================================================
+
+\paragraph{Step A: even $k$.} By Proposition~\ref{prop:minus-even} this is the
+subcase of A141399 in which the Pell abscissa $x_n(D)=2m+1$ is a perfect power.
+Any proof of A141399 settles it. Independently, perfect powers in Lucas and Pell
+sequences are a classical subject (for squares, the equation $X^4-DY^2=1$
+\verify{Ljunggren; Bennett--Walsh}), which could give a direct treatment branch
+by branch; uniformity over the branches $D$ is the same obstacle as in A141399.
+
+\paragraph{Step B: odd $k\ge5$.} Theorem~\ref{thm:abc} gives finiteness under
+$abc$. Two unconditional deliverables are realistic: (i) exact classification at
+small orders by the Thue algorithm of \S\ref{sec:bennett} (degree $k$ forms,
+$k^r$ classes); (ii) a version of Theorem~\ref{thm:abc} uniform in $k$, which
+needs Zsigmondy's theorem~\cite{Zsigmondy} (a primitive prime of $\Phi_k(y)$ is
+$\equiv1\pmod k$, so $k<p_r$) together with Lemma~\ref{lem:density} for moduli
+growing with $r$.
+
+\paragraph{Step C: $k=3$, the core.}
+\begin{enumerate}
+\item[C1.] \emph{Extend the exact classification.} Push the Thue computation of
+$L_3(r)$ to $r\approx12$, certifying unconditionally as far as class-group
+certification allows. The floor side is already cheap through $r=32$. This
+gives an order-by-order certificate, as \texttt{LC\_Solver} does for A141399.
+\item[C2.] \emph{Prove the cubic floor bound} (F$_3$). By Lemma~\ref{lem:Q},
+$y=\pm1+Q_3(r)\,t$, and the conditions on $t$ live modulo
+$M_r=\prod_{q\le p_r,\,q\equiv1(3)}q\approx P_r^{1/2}$, in $3^{\pi(p_r;3,1)}=P_r^{o(1)}$
+admissible classes. (F$_3$) asks only that none of these classes has a
+representative below $P_r^{c}$, far below the expected $P_r^{1/2-o(1)}$. It is a
+least-solution problem for an explicit CRT set, the cubic analogue of the floor
+problem for A118478, and is weaker than full equidistribution. With $abc$, it
+proves the case $k=3$ (Theorem~\ref{thm:abcfloor}).
+\item[C3.] \emph{An unconditional attack on the critical stratum.} By
+Corollary~\ref{cor:k3}, $\Phi_3(y)$ must be nearly powerful on the class
+$1\bmod3$. Writing $\Phi_3(y)=cz^2$ with $c$ squarefree turns this into the
+family of equations $(2y+1)^2-4cz^2=-3$, indexed by squarefree $c$ supported on
+$\{3\}\cup\{q\equiv1\ (3)\}$. The condition $Q_3(r)\mid y-1$ is then a set of
+rank-of-apparition conditions on each family, which is the structure that the
+anchor theorem exploits for A141399. The same uniformity barrier is expected, but
+the extra congruence $y\equiv1\pmod{Q_3(r)}$, which A141399 lacks, is a new lever.
+\end{enumerate}
+
+\paragraph{Step D: the general principle.} The obstruction of
+\S\ref{sec:odd} applies to every intersective polynomial with a non-linear
+irreducible factor: primes whose Frobenius has no fixed point on the roots of
+that factor are forced into the other factors. Formulating a general
+``residue-class tax'' conjecture, and testing it on families such as
+$x(x^2+1)$ and $(x^2-2)(x^2-3)(x^2-6)$, is a natural next step.
+
+\paragraph{Code and data.} \texttt{pc\_power\_neighbors.py} (E2),
+\texttt{thue\_k3.py} (E3) and \texttt{cubic\_floor2.py} (E4) reproduce every
+number in this note.
+
+% =====================================================================
+\begin{thebibliography}{99}
+
+\bibitem{A055932} OEIS Foundation Inc., \emph{A055932: numbers where all prime
+divisors are consecutive primes starting at 2},
+\url{https://oeis.org/A055932}.
+
+\bibitem{A141399} OEIS Foundation Inc., \emph{A141399},
+\url{https://oeis.org/A141399} (including the generator program of Chai Wah Wu,
+5 April 2026, and the comments of K.~Clements, 6 August 2026).
+
+\bibitem{Bennett} M.~A.~Bennett, \emph{Rational approximation to algebraic
+numbers of small height: the Diophantine equation $|ax^n-by^n|=1$}, J.\ Reine
+Angew.\ Math.\ \textbf{535} (2001), 1--49.
+
+\bibitem{BiluHanrot} Yu.~Bilu and G.~Hanrot, \emph{Solving Thue equations of
+high degree}, J.\ Number Theory \textbf{60} (1996), 373--392.
+
+\bibitem{deBruijn} N.~G.~de~Bruijn, \emph{On the number of positive integers
+$\le x$ and free of prime factors $>y$, II}, Indag.\ Math.\ \textbf{28} (1966),
+239--247. \verify{volume and pages}
+
+\bibitem{Elkies} N.~D.~Elkies, \emph{ABC implies Mordell}, Internat.\ Math.\
+Res.\ Notices \textbf{1991}, no.~7, 99--109.
+
+\bibitem{Granville} A.~Granville, \emph{Smooth numbers: computational number
+theory and beyond}, in: Algorithmic Number Theory, MSRI Publ.\ \textbf{44},
+Cambridge Univ.\ Press, 2008, 267--323.
+
+\bibitem{LS} J.~C.~Lagarias and K.~Soundararajan, \emph{Smooth solutions to the
+$abc$ equation: the $xyz$ conjecture}, J.\ Th\'eor.\ Nombres Bordeaux
+\textbf{23} (2011), 209--234.
+
+\bibitem{Langevin} M.~Langevin, \emph{Cas d'\'egalit\'e pour le th\'eor\`eme de
+Mason et applications de la conjecture (abc)}, C.\ R.\ Acad.\ Sci.\ Paris
+S\'er.\ I \textbf{317} (1993), 441--444.
+
+\bibitem{Lehmer} D.~H.~Lehmer, \emph{On a problem of St{\o}rmer}, Illinois J.\
+Math.\ \textbf{8} (1964), 57--79.
+
+\bibitem{Masser} D.~W.~Masser, \emph{Open problems}, Proc.\ Symp.\ Analytic
+Number Theory, Imperial College, London, 1985.
+
+\bibitem{Mordell} L.~J.~Mordell, \emph{Diophantine Equations}, Academic Press,
+1969.
+
+\bibitem{NPP} C.~Nelson, D.~E.~Penney and C.~Pomerance, \emph{714 and 715},
+J.\ Recreational Math.\ \textbf{7} (1974), 87--89.
+
+\bibitem{Oesterle} J.~Oesterl\'e, \emph{Nouvelles approches du ``th\'eor\`eme''
+de Fermat}, S\'em.\ Bourbaki no.~694, Ast\'erisque \textbf{161--162} (1988),
+165--186.
+
+\bibitem{PARI} The PARI~Group, \emph{PARI/GP version 2.17.2}, Univ.\ Bordeaux,
+\url{https://pari.math.u-bordeaux.fr/}.
+
+\bibitem{Zsigmondy} K.~Zsigmondy, \emph{Zur Theorie der Potenzreste}, Monatsh.\
+Math.\ Phys.\ \textbf{3} (1892), 265--284.
+
+\end{thebibliography}
+
+\end{document}
